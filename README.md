@@ -19,4 +19,6 @@
   3. https://www.swiper.com.cn/usage/index.html
   4. 在vue的mounted(){new一个Swiper}
 7. $router.back() 返回上级路由
+8. 可以在route中给每个路由配置一个属性值`meta:{key:value}`用来判断一些问题
+
   
