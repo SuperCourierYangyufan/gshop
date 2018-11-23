@@ -21,6 +21,23 @@
     ```
   3. https://www.swiper.com.cn/usage/index.html
   4. 在vue的mounted(){new一个Swiper}
+  5. 因为swiper必须在界面更新完毕后在创建实例,所以需要先监听数据,再使用$nextTick
+      ```
+         watch:{
+                categorys(newValue){
+                    //界面更新立即创建swiper对象
+                  this.$nextTick(()=>{
+                    new Swiper('.swiper-container',{ //第一个参数为主类名
+                      loop: true, // 循环轮播
+                      // 如果需要分页器
+                      pagination: {
+                        el: '.swiper-pagination', //为分页器的类名
+                      },
+                    });
+                  });
+                }
+              },
+      ```
 ### 5. axios方法使用
   1. 封装的ajax方法
       ```

@@ -49,6 +49,20 @@
         HeaderTop,
         ShopList
       },
+      watch:{
+        categorys(newValue){
+            //界面更新立即创建swiper对象
+          this.$nextTick(()=>{
+            new Swiper('.swiper-container',{ //第一个参数为主类名
+              loop: true, // 循环轮播
+              // 如果需要分页器
+              pagination: {
+                el: '.swiper-pagination', //为分页器的类名
+              },
+            });
+          });
+        }
+      },
       methods:{
       },
       data(){
@@ -58,15 +72,7 @@
       },
       mounted(){
         this.$store.dispatch('getFoodTypes');
-
-
-        new Swiper('.swiper-container',{ //第一个参数为主类名
-          loop: true, // 循环轮播
-          // 如果需要分页器
-          pagination: {
-            el: '.swiper-pagination', //为分页器的类名
-          },
-        });
+        this.$store.dispatch('getShopList');
       },
       computed:{
         ...mapState(['address','categorys']),
