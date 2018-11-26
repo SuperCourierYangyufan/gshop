@@ -2,17 +2,17 @@
   <section class="profile">
     <header-top title="我的"></header-top>
     <section class="profile-number">
-      <router-link to="/login" class="profile-link">
+      <router-link :to="userInfo._id?'/userinfo':'/login'" class="profile-link">
         <div class="profile_image">
           <i class="iconfont icon-person"></i>
         </div>
         <div class="user-info">
-          <p class="user-info-top">登录/注册</p>
+          <p class="user-info-top">{{(userInfo.name||userInfo.phone?userInfo.name:'登入/注册')}}</p>
           <p>
                 <span class="user-icon">
                   <i class="iconfont icon-shouji icon-mobile"></i>
                 </span>
-            <span class="icon-mobile-number">暂无绑定手机号</span>
+            <span class="icon-mobile-number">{{userInfo.phone?userInfo.phone:'暂无绑定手机号'}}</span>
           </p>
         </div>
         <span class="arrow">
@@ -67,7 +67,7 @@
               <i class="iconfont icon-vip"></i>
             </span>
         <div class="my_order_div">
-          <span>硅谷外卖会员卡</span>
+          <span>美团外卖会员卡</span>
           <span class="my_order_icon">
                 <i class="iconfont icon-jiantou1"></i>
               </span>
@@ -88,15 +88,36 @@
         </div>
       </a>
     </section>
+    <section class="profile_my_order border-1px" v-show="userInfo._id" @click="logout">
+      <mt-button type="danger" style="width: 100%">退出登入</mt-button>
+    </section>
   </section>
 </template>
 
 <script>
   import HeaderTop from "../../components/HeaderTop/HeaderTop.vue"
+  import {mapState} from 'vuex';
+  import { MessageBox,Toast } from 'mint-ui';
   export default {
     name: "profile",
     components:{
       HeaderTop
+    },
+    computed:{
+      ...mapState(['userInfo']),
+    },
+    methods:{
+      logout(){
+        MessageBox.confirm('确定是否退出?').then(action => {
+          //确定
+          this.$store.dispatch('logout');
+          Toast({
+            message: '退出成功',
+          });
+        },action=>{
+          //不退出
+        });
+      },
     },
   }
 </script>

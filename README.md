@@ -9,6 +9,7 @@
   4. $router.back() 返回上级路由
   5. $route.path可以获得当前页面路由路径,可以在选择为该路由时高亮显示图标`:class="{on: '/search'===$route.path}"`
   6. 可以在route中给每个路由配置一个属性值`meta:{key:value}`用来判断一些问题
+  7. `this.$emit('方法名')|<子组件标签名 @方法名="父组件自定义方法名"`将子组件元素或方法抛出到父组件中 
 ### 3. stylus
   1. cnpm install stylus stylus-loader --save-dev
   2. `<style lang="stylus" rel="stylesheet/stylus>`
@@ -218,4 +219,6 @@
               ...mapActions(['getAddress']),
             },
       ```
- 
+### 7. ref
+  1. 在标签上`ref="自定义属性名"`
+  2. 可通过`this.$refs.自定义属性名.该标签属性`改变值

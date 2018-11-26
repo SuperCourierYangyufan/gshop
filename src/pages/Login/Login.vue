@@ -40,7 +40,7 @@
               </section>
               <section class="login_message">
                 <input type="text" maxlength="11" placeholder="验证码" v-model="captcha">
-                <img class="get_verification" src="./images/captcha.svg" alt="captcha">
+                <img class="get_verification" src="http://localhost:4000/captcha" alt="captcha" @click="getCaotcha" ref="captcha">
               </section>
             </section>
           </div>
@@ -57,7 +57,8 @@
 </template>
 
 <script>
-  import AlertTip from '../../components/AlertTip/alertTip'
+  import AlertTip from '../../components/AlertTip/alertTip';
+  import {reqPwdLogin,reqSendCode,reqSms} from '../../api';
     export default {
         name: "login",
         data(){
@@ -83,54 +84,110 @@
         },
       },
       methods:{
-        getCode(){
+        async getCode() {
           //如果当前没有计时器才触发
-          if(this.computedTime===0){
+          if (this.computedTime === 0) {
             this.computedTime = 30;
-            let clearIntervalId = setInterval(()=>{
+            this.clearIntervalId = setInterval(() => {
               this.computedTime--;
-              if(this.computedTime===0){
-                clearInterval(clearIntervalId);
+              if (this.computedTime === 0) {
+                clearInterval(this.clearIntervalId);
               }
-            },1000);
-          };
-        },
+            }, 1000);
+          }
+          ;
 
-        closeTip(){
-          this.alertShow=false;
-          this.alertText = '';
-        },
-
-
-        showAlert(alertText){
-          this.alertText = alertText;
-          this.alertShow=true;
-        },
-
-        login(){
-          //前台表单验证
-          if(this.loginType){ //短信登入
-            if(!this.rightPhone){
-              //手机号不正确
-              this.showAlert('手机号不正确');
-            }else if(!/^\d{6}$/.test(this.code)){
-              //验证码必须为6位数
-              this.showAlert('验证码必须为6位数');
-            }
-          }else{
-          //验证码登入
-            if(!this.name){
-              //用户名必须指定
-              this.showAlert('用户名必须指定');
-            }else if(!this.pwd){
-              this.showAlert('密码不能为空');
-            }else if(!this.captcha){
-                //验证码必须指定
-              this.showAlert('验证码必须指定');
+          //ajax发送短信验证码
+          const result = await reqSendCode(this.phone)
+          if (result.code === 1) {
+            //显示提示
+            this.showAlert(result.msg);
+            //停止倒计时
+            if (this.computedTime) {
+              this.computedTime = 0;
+              clearInterval(this.clearIntervalId);
+              this.clearIntervalId = undefined;
             }
           }
         },
-      },
+
+
+        getCaotcha() {
+          //获取新的图片验证码,每次指定的src值不一样
+         this.$refs.captcha.src = "http://localhost:4000/captcha?time=" + Date.now();
+        },
+
+        closeTip() {
+          this.alertShow = false;
+          this.alertText = '';
+        },
+
+        showAlert(alertText) {
+          this.alertText = alertText;
+          this.alertShow = true;
+        },
+
+        async login() {
+          let result;
+          //前台表单验证
+          if (this.loginType) { //短信登入
+            if (!this.rightPhone) {
+              //手机号不正确
+              this.showAlert('手机号不正确');
+              return;
+            } else if (!/^\d{6}$/.test(this.code)) {
+              //验证码必须为6位数
+              this.showAlert('验证码必须为6位数');
+              return;
+            }
+            //发送ajax请求短信登入
+             result = await reqSms(this.phone, this.code);
+          } else {
+            //验证码登入
+            if (!this.name) {
+              //用户名必须指定
+              this.showAlert('用户名必须指定');
+              return;
+            } else if (!this.pwd) {
+              this.showAlert('密码不能为空');
+              return;
+            } else if (!this.captcha) {
+              //验证码必须指定
+              this.showAlert('验证码必须指定');
+              return;
+            }
+            //发送ajax请求密码登入
+            result = await reqPwdLogin({name: this.name, pwd: this.pwd, captcha: this.captcha});
+          }
+
+         //关闭定时
+
+
+          if (this.computedTime) {
+            this.computedTime = 0;
+            clearInterval(this.clearIntervalId);
+            this.clearIntervalId = undefined;
+          }
+
+
+
+          if (result.code === 0) {
+            //成功
+            const user = result.data;
+            //将user保存vuex
+            this.$store.dispatch('recordUser',user);
+
+            //跳转
+            this.$router.replace('/profile');
+          } else {
+            const msg = result.msg;
+            //显示新的图片验证码
+            this.getCaotcha();
+            //错误提示
+            this.showAlert(msg);
+          }
+        },
+      }
     }
 </script>
 

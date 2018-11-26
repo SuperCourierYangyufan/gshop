@@ -2,12 +2,14 @@
     <section class="msite">
       <!--首页头部-->
       <header-top :title="address.name" >
-        <span class="header_search" slot="search">
+        <router-link class="header_search" slot="search" to="/search">
           <i class="iconfont icon-sousuo"></i>
-        </span>
-        <span class="header_login" slot="login">
-            <span class="header_login_text">登录|注册</span>
-        </span>
+        </router-link>
+        <router-link class="header_login" slot="login" :to="userInfo._id?'/userinfo':'/login'">
+          <span v-if="!userInfo._id">登入|注册</span>
+          <i class="iconfont icon-person" v-else></i>
+          <span  class="header_login_text" ></span>
+        </router-link>
       </header-top>
       <!--首页导航-->
       <nav class="msite_nav" >
@@ -76,7 +78,7 @@
         this.$store.dispatch('getShopList');
       },
       computed:{
-        ...mapState(['address','categorys']),
+        ...mapState(['address','categorys','userInfo']),
         //根据categorys一位数组改为二维数组
         categoryArr(){
           const categorys = this.categorys;
