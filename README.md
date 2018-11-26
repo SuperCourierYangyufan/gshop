@@ -10,6 +10,7 @@
   5. $route.path可以获得当前页面路由路径,可以在选择为该路由时高亮显示图标`:class="{on: '/search'===$route.path}"`
   6. 可以在route中给每个路由配置一个属性值`meta:{key:value}`用来判断一些问题
   7. `this.$emit('方法名')|<子组件标签名 @方法名="父组件自定义方法名"`将子组件元素或方法抛出到父组件中 
+  8. 子路由 `children:[{path:....}{path:'',redirect:''}]`path属性为空,设置父路由默认子路由
 ### 3. stylus
   1. cnpm install stylus stylus-loader --save-dev
   2. `<style lang="stylus" rel="stylesheet/stylus>`
@@ -165,16 +166,17 @@
   * mutations.js(对store的直接操作)
     ```  
     //import导入的为 RECEIVE_对象名大写
-    //{这里面为state里面定义的值}
       import {
         RECEIVE_ADDRESS, 
       } from "./mutations-type";
       
       export default {
-        [RECEIVE_ADDRESS](state,{address}){
+        [RECEIVE_ADDRESS](state,{address}){//{这里的address为action方法需要接受的值}
           state.address = address;
         },
       }
+      -----------------------------------------------------------------------------
+      [functionName](num1,num2){} == functionName:function(num1,num2){}
     ```
   * action.js
   * 注意async,await
@@ -222,3 +224,15 @@
 ### 7. ref
   1. 在标签上`ref="自定义属性名"`
   2. 可通过`this.$refs.自定义属性名.该标签属性`改变值
+### mock模拟数据
+  1. cnpm install --save mockjs
+  2. 编写一个js文件,写入拦截路径与随机规则  
+    ``` 
+      import Mock from 'mockjs';
+              Mock.mock('/goods',{
+                "code":0,
+                "data|": /\d{5,10}/  
+              })
+    ``` 
+  3. 在main.js中`import ../路径`引入
+  4. 编写ajax函数测试(vuex一套流程)

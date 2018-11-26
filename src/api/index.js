@@ -21,3 +21,10 @@ export const reqUserInfo = ()=> ajax(BASE_URL+'/userinfo');
 export const reqLogout = ()=> ajax(BASE_URL+'/logout');
 //根据经纬度搜索商铺列表
 export const reqsearchShops = (geohash,keyword) =>ajax(BASE_URL+'/search_shops',{geohash,keyword});
+//获取商家信息
+export const reqShopInfo = ()=>ajax('/shop_info')
+//获取商家评价数组
+export const reqShopRating = ()=>ajax('/shop_ratings')
+//获取商家数组
+export const reqShopGoods =()=>ajax('/shop_goods')
+
