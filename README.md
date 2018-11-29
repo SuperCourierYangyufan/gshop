@@ -181,7 +181,7 @@
   * action.js
   * 注意async,await
   * 方法参数commit,state均在大括号内,若有其他外部参数则在大括号外
-   ```
+    ```
     import {
       RECEIVE_ADDRESS,
     } from "./mutations-type";
@@ -202,7 +202,7 @@
       },
     }
 
-   ```
+    ```
   * 使用
     1. 第一个为方法名,第二个为可传入参数
       ``` 
@@ -227,12 +227,33 @@
 ### mock模拟数据
   1. cnpm install --save mockjs
   2. 编写一个js文件,写入拦截路径与随机规则  
-    ``` 
+     ``` 
       import Mock from 'mockjs';
               Mock.mock('/goods',{
                 "code":0,
                 "data|": /\d{5,10}/  
               })
-    ``` 
+     ``` 
   3. 在main.js中`import ../路径`引入
   4. 编写ajax函数测试(vuex一套流程)
+### better-scroll:UI滑动
+  1. cnpm install --save better-scroll
+  2. 在需要的组件`import BScroll from 'better-scroll'`
+  3. 可以在this.$store.dispatch()参数中添加一个函数,action.js中的方法进行修改
+     ``` 
+      async getShopGoods({commit},callback) {
+           .................
+          //数据已经更新,执行回调的函数,&&放置没有传东西
+          callback && callback()
+        }
+     ```
+  4. 调用
+     ``` 
+      mounted(){
+        this.$store.dispatch('getShopGoods', () => {// goods 更新了, 界面还没有更新
+        this.$nextTick(() => { //$nextTick
+         new BScroll('.div的类名') //包含ul li内容
+            })
+          })
+         },
+     ```

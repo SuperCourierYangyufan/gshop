@@ -11,6 +11,7 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "better-scroll": "^1.13.2",
     "mint-ui": "^2.2.13",
     "mockjs": "^1.0.1-beta3",
     "swiper": "^4.4.2",
