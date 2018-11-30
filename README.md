@@ -41,7 +41,8 @@
               },
       ```
 ### 5. axios方法使用
-  1. 封装的ajax方法
+  1. 基本使用时请用箭头函数,要不然this并不是指向data数据
+  2. 封装的ajax方法
       ```
           import axios from 'axios'
           export default function ajax(url,data={},type='GET') {
@@ -71,7 +72,7 @@
             });
           }
       ```
-  2. 封装请求函数
+  3. 封装请求函数
      跨域伪装(config/index.js)
       ```
         proxyTable: {
@@ -95,7 +96,7 @@
       ``` 
         export const 函数名 = (参数) =>ajax(BASE_URL+`/地址/${参数}`,{参数名:参数}); //注意是``(左上角按键)不是''(单引)
       ```
-  3. vue里面使用  
+  4. vue里面使用  
       ``` 
        import {函数名} from "路径"
        .....
@@ -252,8 +253,14 @@
       mounted(){
         this.$store.dispatch('getShopGoods', () => {// goods 更新了, 界面还没有更新
         this.$nextTick(() => { //$nextTick
-         new BScroll('.div的类名') //包含ul li内容
-            })
+         const 常量名 = new BScroll('.div的类名') //包含ul li内容
+              //设置选项/基础 key:value
+            });
+            常量名.on("文档中的事件名",({x,y})=>{});
           })
          },
      ```
+### js操作
+  1. Array.prototype.slice.call(数组) //将数组转化为Array
+  2. 元素.clientHeight   //包括padding但不包括border、水平滚动条、margin的元素的高度
+  3.Math.abs(值); //取绝对值
