@@ -2,7 +2,7 @@
   <div>
     <div class="shopcart">
       <div class="content">
-        <div class="content-left">
+        <div class="content-left" @click="toggleShow">
           <div class="logo-wrapper">
             <div class="logo " :class="{highlight:totalCount}">
               <i class="iconfont icon-shopping_cart" :class="{highlight:totalCount}"></i>
@@ -18,39 +18,75 @@
           </div>
         </div>
       </div>
-      <div class="shopcart-list" style="display: none;">
-        <div class="list-header">
-          <h1 class="title">购物车</h1>
-          <span class="empty">清空</span>
-        </div>
-        <div class="list-content">
-          <ul>
-            <li class="food">
-              <span class="name">红枣山药糙米粥</span>
-              <div class="price"><span>￥10</span></div>
-              <div class="cartcontrol-wrapper">
-                <div class="cartcontrol">
-                  <div class="iconfont icon-remove_circle_outline"></div>
-                  <div class="cart-count">1</div>
-                  <div class="iconfont icon-add_circle"></div>
+      <transition name="move">
+        <div class="shopcart-list" v-show="listShow" >
+          <div class="list-header">
+            <h1 class="title">购物车</h1>
+            <span class="empty" @click="clearCart">清空</span>
+          </div>
+          <div class="list-content">
+            <ul>
+              <li class="food" v-for="(food,index) in cartFoods">
+                <span class="name">{{food.name}}</span>
+                <div class="price"><span>￥{{food.price}}/份</span></div>
+                <div class="cartcontrol-wrapper">
+                  <cart-control :food="food"></cart-control>
                 </div>
-              </div>
-            </li>
-          </ul>
+              </li>
+            </ul>
+          </div>
         </div>
-      </div>
+
+      </transition>
     </div>
-    <div class="list-mask" style="display: none;"></div>
+    <div class="list-mask" v-show="listShow" @click="toggleShow"></div>
   </div>
 </template>
 
 <script>
   import {mapState,mapGetters} from 'vuex';
+  import CartControl from '../CartControl/CartControl';
+  import BScroll from 'better-scroll'
+  import { MessageBox } from 'mint-ui';
     export default {
         name: "shop-cart",
+      data(){
+          return{
+            isShow:false,
+          }
+      },
+      methods:{
+          toggleShow(){
+            if(this.totalCount>0){
+              this.isShow = !this.isShow;
+            }
+          },
+        clearCart(){
+          MessageBox.confirm('确定清除?').then(action => {
+                this.$store.dispatch("clearCart")
+          },);
+        }
+      },
+      components:{
+        CartControl
+      },
         computed:{
           ...mapState(['cartFoods','info']),
           ...mapGetters(['totalCount','totalPrice']),
+          listShow(){
+            if(this.totalCount ===0){
+              this.isShow = false;
+              return false;
+            }
+            if(this.isShow){
+              this.$nextTick(()=>{
+                  this.scroll = new BScroll('.list-content',()=>{
+                    click: true
+                  });
+              });
+            }
+            return this.isShow;
+          },
           payClass(){
             const {totalPrice} = this
             const {minPrice} = this.info

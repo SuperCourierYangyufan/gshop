@@ -10,7 +10,8 @@ import {
   RECEIVE_RATINGS,
   RECEIVE_INFO,
   DECREMENT_FOOD_COUNT,
-  INCREMENT_FOOD_COUNT
+  INCREMENT_FOOD_COUNT,
+  CLEAR_CART
 } from "./mutations-type";
 
 export default {
@@ -55,4 +56,11 @@ export default {
       }
     }
   },
+  [CLEAR_CART](state){
+    state.cartFoods.forEach((food)=>{
+      food.count = 0;
+    });
+
+    state.cartFoods = [];
+  }
 }

@@ -28,3 +28,4 @@ export const reqShopRating = ()=>ajax('/shop_ratings')
 //获取商家数组
 export const reqShopGoods =()=>ajax('/shop_goods')
 
+
