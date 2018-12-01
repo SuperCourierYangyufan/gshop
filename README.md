@@ -11,6 +11,8 @@
   6. 可以在route中给每个路由配置一个属性值`meta:{key:value}`用来判断一些问题
   7. `this.$emit('方法名')|<子组件标签名 @方法名="父组件自定义方法名"`将子组件元素或方法抛出到父组件中 
   8. 子路由 `children:[{path:....}{path:'',redirect:''}]`path属性为空,设置父路由默认子路由
+  9. `<keep-alive><router-view></router-view></keep-alive>` //缓存路由组件
+  10. 在router-view中加入属性replace可以解决返回上级目录不停缓存路由组件
 ### 3. stylus
   1. cnpm install stylus stylus-loader --save-dev
   2. `<style lang="stylus" rel="stylesheet/stylus>`
@@ -267,3 +269,25 @@
   2. 元素.clientHeight   //包括padding但不包括border、水平滚动条、margin的元素的高度
   3. Math.abs(值); //取绝对值
   4. 数组.reduce((计算结束后的返回值,遍历的对象)=>操作,初始值); //累加器
+### 图片懒加载
+  1. cnpm install --save vue-lazyload
+  2. main.js引入
+      ```
+        import  VueLazyLoad from 'vue-lazyload' //引入lazyload
+        import loading from './common/imgs/loading.gif'//引入懒加载图片(图片尚未加载时候加载的图片)
+        Vue.use(VueLazyLoad,{ //内部自定义指令 :src换成v-lazy
+          loading
+        })
+      ```
+### 日期格式化
+  1. cnpm install --save moment
+  2. 创建一个filters文件夹写一个js文件
+      ```
+       import Vue from 'vue'
+       import moment from 'moment'
+       Vue.filter('dataFormat',function (value) {
+         return moment(value).format("YYYY-MM-DD HH:mm:ss")
+       });
+    
+     ```
+  3. main.js中引入`import './filters'`
