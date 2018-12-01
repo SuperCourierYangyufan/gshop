@@ -10,7 +10,8 @@ import {
   RECEIVE_GOODS,
   DECREMENT_FOOD_COUNT,
   INCREMENT_FOOD_COUNT,
-  CLEAR_CART
+  CLEAR_CART,
+  RESER_SEARCH_SHOPS
 } from "./mutations-type";
 
 import {
@@ -21,7 +22,8 @@ import {
   reqLogout,
   reqShopInfo,
   reqShopRating,
-  reqShopGoods
+  reqShopGoods,
+  reqsearchShops
 } from '../api'
 export default{
   async getAddress({commit, state}) {
@@ -116,5 +118,13 @@ export default{
 
   clearCart({commit}){
       commit(CLEAR_CART);
+  },
+
+  async getSearchShop({commit,state},keyword){
+      const result = await reqsearchShops((state.latitude+','+state.longitude),keyword);
+      if(result.code===0){
+        const searchShops = result.data;
+        commit(RESER_SEARCH_SHOPS,{searchShops})
+      }
   }
 }

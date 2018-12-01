@@ -1,53 +1,67 @@
 <template>
   <section class="search">
    <header-top title="搜索"></header-top>
-    <form class="search_form">
-      <input type="search" placeholder="请输入商家名称" class="search_input">
-      <input type="submit" class="search_submit">
+    <form class="search_form" @submit.prevent="search">
+      <input type="search" placeholder="请输入商家名称" class="search_input" v-model="searchText">
+      <input type="submit" class="search_submit" >
     </form>
-    <section class="list"><ul class="list_container">
-      <li class="list_li">
-        <section class="item_left">
-          <img src="http://cangdu.org:8001/img/16265a70fe27854.jpg"
-               class="restaurant_img">
-        </section>
-        <section class="item_right">
-          <div class="item_right_text">
-            <p>
-              <span>aaa</span>
-            </p>
-            <p>月售 671 单</p>
-            <p>20 元起送 / 距离 1058.2 公里</p>
-          </div>
-        </section>
-      </li>
-      <li class="list_li">
-        <section class="item_left">
-          <img src="http://cangdu.org:8001/img/16265a70fe27854.jpg"
-               class="restaurant_img">
-        </section>
-        <section class="item_right">
-          <div class="item_right_text">
-            <p>
-              <span>aaa</span>
-            </p>
-            <p>月售 671 单</p>
-            <p>20 元起送 / 距离 1058.2 公里</p>
-          </div>
-        </section>
-      </li>
-    </ul>
+    <section class="list">
+      <ul class="list_container">
+        <router-link :to="{path:'/shop', query:{id:item.id}}" tag="li" v-for="item in searchShops" :key="item.id" class="list_li">
+          <section class="item_left">
+            <img :src="imgBaseUrl+imgBaseUrl + item.image_path" class="restaurant_img">
+          </section>
+          <section class="item_right">
+            <div class="item_right_text">
+              <p>
+                <span>{{item.name}}</span>
+              </p>
+              <p>月售 {{item.month_sales||item.recent_order_num}} 单</p>
+              <p>{{item.delivery_fee||item.float_minimum_order_amount}} 元起送 / 距离
+                {{item.distance}}</p>
+            </div>
+          </section>
+        </router-link>
+      </ul>
     </section>
+
+    <div class="search_none" v-show="noSearchShops">很抱歉!无搜索结果</div>
   </section>
 </template>
 
 <script>
   import HeaderTop from "../../components/HeaderTop/HeaderTop.vue"
+  import {mapState} from 'vuex'
   export default {
     name: "search",
     components:{
       HeaderTop
     },
+    computed:{
+      ...mapState(['searchShops']),
+    },
+    data(){
+      return{
+        searchText:'',
+        imgBaseUrl: 'http://cangdu.org:8001/img/',
+        noSearchShops:false
+      }
+    },
+    methods:{
+      search(){
+        if(this.searchText.trim()){
+          this.noSearchShops = false;
+          this.$store.dispatch('getSearchShop',this.searchText)
+        }
+      }
+    },
+    watch:{
+      searchShops(value){
+        if(!value.length){
+          this.noSearchShops = true
+        }
+      }
+    }
   }
 </script>
 

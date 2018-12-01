@@ -11,7 +11,8 @@ import {
   RECEIVE_INFO,
   DECREMENT_FOOD_COUNT,
   INCREMENT_FOOD_COUNT,
-  CLEAR_CART
+  CLEAR_CART,
+  RESER_SEARCH_SHOPS
 } from "./mutations-type";
 
 export default {
@@ -62,5 +63,8 @@ export default {
     });
 
     state.cartFoods = [];
+  },
+  [RESER_SEARCH_SHOPS](state,{searchShops}){
+    state.searchShops= searchShops;
   }
 }
