@@ -8,6 +8,8 @@ import {
   RECEIVE_INFO,
   RECEIVE_RATINGS,
   RECEIVE_GOODS,
+  DECREMENT_FOOD_COUNT,
+  INCREMENT_FOOD_COUNT
 } from "./mutations-type";
 
 import {
@@ -101,4 +103,12 @@ export default{
       callback && callback()
     }
   },
+
+  updataFoodCount({commit},{isAdd,food}){
+      if(isAdd){
+        commit(INCREMENT_FOOD_COUNT,{food})
+      }else {
+        commit(DECREMENT_FOOD_COUNT,{food})
+      }
+  }
 }

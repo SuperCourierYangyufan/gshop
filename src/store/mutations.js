@@ -1,4 +1,5 @@
 //直接更新state对象方法
+import Vue from 'vue'
 import {
   RECEIVE_ADDRESS,
   RECEIVE_CATEGORYS,
@@ -7,7 +8,9 @@ import {
   RESET_USER_INFO,
   RECEIVE_GOODS,
   RECEIVE_RATINGS,
-  RECEIVE_INFO
+  RECEIVE_INFO,
+  DECREMENT_FOOD_COUNT,
+  INCREMENT_FOOD_COUNT
 } from "./mutations-type";
 
 export default {
@@ -35,5 +38,21 @@ export default {
   [RECEIVE_INFO](state,{info}){
     state.info = info;
   },
-
+  [INCREMENT_FOOD_COUNT](state,{food}){
+    if(!food.count){
+      Vue.set(food,'count',1) //让新增的属性也有数据绑定
+      state.cartFoods.push(food);
+    }else {
+      food.count++;
+    }
+  },
+  [DECREMENT_FOOD_COUNT](state,{food}){
+    if(food.count){
+      food.count--;
+      if(food.count===0){
+        //移除cartFood中的food
+        state.cartFoods.splice(state.cartFoods.indexOf(food),1);
+      }
+    }
+  },
 }

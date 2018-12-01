@@ -131,7 +131,8 @@
         export default new Vuex.Store({state, mutations, actions})
       ```
 2. main.js引入`import store from './store'`
-3. store文件夹操作(模块化_异步操作ajax)
+3. Vue.set(food,'count',1) //让新增的属性也有数据绑定,food添加属性count(字符串)值为1
+4. store文件夹操作(模块化_异步操作ajax)
   * 主文件store.js
     ``` 
       //格式完全固定
@@ -222,6 +223,7 @@
               ...mapActions(['getAddress']),
             },
       ```
+
 ### 7. ref
   1. 在标签上`ref="自定义属性名"`
   2. 可通过`this.$refs.自定义属性名.该标签属性`改变值
@@ -263,4 +265,5 @@
 ### js操作
   1. Array.prototype.slice.call(数组) //将数组转化为Array
   2. 元素.clientHeight   //包括padding但不包括border、水平滚动条、margin的元素的高度
-  3.Math.abs(值); //取绝对值
+  3. Math.abs(值); //取绝对值
+  4. 数组.reduce((计算结束后的返回值,遍历的对象)=>操作,初始值); //累加器

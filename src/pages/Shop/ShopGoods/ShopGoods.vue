@@ -16,7 +16,7 @@
           <li class="food-list-hook " v-for="(good,index) in goods" :key="index">
             <h1 class="title">{{good.name}}</h1>
             <ul>
-              <li class="food-item bottom-border-1px" v-for="(item,index) in good.foods" :key="index">
+              <li @click="showFood(item)" class="food-item bottom-border-1px" v-for="(item,index) in good.foods" :key="index">
                 <div class="icon">
                   <img width="57" height="57" :src="item.image">
                 </div>
@@ -31,7 +31,7 @@
                     <span class="old" v-if="item.oldPrice">￥{{item.oldPrice}}</span>
                   </div>
                   <div class="cartcontrol-wrapper">
-                    CartControl
+                    <shop-control :food="item"></shop-control>
                   </div>
                 </div>
               </li>
@@ -39,7 +39,9 @@
           </li>
         </ul>
       </div>
+      <shop-cart></shop-cart>
     </div>
+    <food :food="food"  ref="food"></food>
   </div>
 </template>
 
@@ -47,8 +49,16 @@
 <script>
   import {mapState} from 'vuex'
   import BScroll from 'better-scroll'
+  import ShopControl from '../../../components/CartControl/CartControl'
+  import food from '../../../components/Food/Food'
+  import ShopCart from '../../../components/ShopCart/ShopCart'
     export default {
         name: "shop-goods",
+      components:{
+          ShopControl,
+           food,
+        ShopCart
+      },
         mounted(){
           this.$store.dispatch('getShopGoods', () => {// goods 更新了, 界面还没有更新
             this.$nextTick(() => {
@@ -77,7 +87,8 @@
       data(){
           return{
             scrolly:0, //右侧滑动Y轴的坐标
-            tops:[], //右侧分类li的top组成的数组
+            tops:[], //右侧分类li的top组成的数组,
+            food:{},
           }
       },
       methods:{
@@ -118,6 +129,11 @@
           //更新
           this.tops = tops;
         },
+        showFood(food){
+          this.food = food;
+          //显示food
+          this.$refs.food.toggleShow();
+        }
       },
 
     }
